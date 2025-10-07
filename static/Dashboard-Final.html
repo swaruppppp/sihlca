@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>CircuLytix – Aluminum LCI (Circular)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+/* === Fix: ensure headings render above full-screen background overlays === */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: inherit;
+    z-index: 0 !important; /* ensures the overlay stays behind all content */
+    pointer-events: none;  /* prevents blocking clicks or focus */
+}
+
+/* Make sure headings and main content are always above the background */
+header, h1, h2, h3, h4, h5, h6,
+.container, .dashboard, .main-content, .app, .card {
+    position: relative;
+    z-index: 10 !important;
+    isolation: isolate;
+}
+/* === End of fix === */
+
+
+    /* Modern Visual Theme with Glassmorphism */
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --bg-primary: #0f0a1f;
+      --bg-secondary: #1a1333;
+      --gradient-primary: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+      --gradient-accent: linear-gradient(135deg, #06B6D4 0%, #0891B2 100%);
+      --gradient-success: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      --accent: #06B6D4;
+      --success: #10B981;
+      --purple: #7C3AED;
+      --text-primary: #ffffff;
+      --text-secondary: #a5b4fc;
+      --text-muted: #6b7280;
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --glow-accent: 0 0 40px rgba(6, 182, 212, 0.3);
+      --glow-purple: 0 0 40px rgba(124, 58, 237, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      background: linear-gradient(135deg, #0f0a1f 0%, #1a1333 50%, #0f0a1f 100%);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: var(--text-primary);
+      overflow-x: hidden;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+      animation: floatBackground 20s ease-in-out infinite;
+    }
+
+    @keyframes floatBackground {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-20px, -20px) rotate(1deg); }
+      66% { transform: translate(20px, -10px) rotate(-1deg); }
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--card-border);
+      animation: slideDown 0.6s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--gradient-primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      box-shadow: var(--glow-purple);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    h1 {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.5px;
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 24px;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    /* Glassmorphism Cards */
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%, 100% { transform: translateX(-100%); }
+      50% { transform: translateX(100%); }
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      border-color: rgba(6, 182, 212, 0.2);
+    }
+
+    /* Section Headers */
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::before {
+      content: '◆';
+      font-size: 0.8rem;
+    }
+
+    /* Form Controls */
+    label {
+      display: block;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 8px;
+      transition: color 0.3s ease;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      background: rgba(6, 182, 212, 0.05);
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    input:hover, select:hover {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    /* Buttons */
+    button {
+      background: var(--gradient-accent);
+      border: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .secondary {
+      background: linear-gradient(135deg, #4B5563 0%, #374151 100%);
+    }
+
+    .secondary:hover {
+      box-shadow: 0 8px 24px rgba(75, 85, 99, 0.4);
+    }
+
+    #aiFillBtn {
+      background: var(--gradient-primary);
+      box-shadow: var(--glow-purple);
+    }
+
+    #aiFillBtn:hover {
+      box-shadow: 0 8px 32px rgba(124, 58, 237, 0.5);
+    }
+
+    /* Grid Columns */
+    .col2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(124, 58, 237, 0.1));
+      border: 1px solid rgba(6, 182, 212, 0.2);
+      padding: 16px;
+      border-radius: 12px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: scale(1.05);
+      box-shadow: var(--glow-accent);
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* AI Recommendation Boxes */
+    .ai-box {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid transparent;
+      border-image: var(--gradient-primary);
+      border-image-slice: 1;
+      padding: 16px;
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-box::after {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: var(--gradient-primary);
+      border-radius: 12px;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.3s ease;
+    }
+
+    .ai-box:hover {
+      transform: translateX(4px);
+      box-shadow: -4px 0 20px rgba(124, 58, 237, 0.2);
+    }
+
+    .ai-box:hover::after {
+      opacity: 0.1;
+    }
+
+    /* Impact Cards */
+    .impact-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(6, 182, 212, 0.05));
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 10px;
+      margin-bottom: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .impact-item:hover {
+      transform: translateX(4px);
+      border-color: var(--success);
+      box-shadow: -4px 0 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .impact-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .impact-icon {
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+    }
+
+    .impact-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    /* Sankey Container */
+    #sankey {
+      height: 380px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--card-border);
+      margin-top: 16px;
+    }
+
+    #sankeyText {
+      color: var(--accent);
+      text-align: center;
+      margin-top: 16px;
+      font-weight: 600;
+      font-size: 1.05rem;
+      opacity: 0;
+      animation: fadeSlideIn 0.9s ease-in forwards;
+    }
+
+    @keyframes fadeSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Divider */
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-border), transparent);
+      margin: 24px 0;
+    }
+
+    /* Loading Animation */
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 0.8s linear infinite;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .container {
+        padding: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .col2 {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Smooth Scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gradient-primary);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent);
+    }
+
+    /* Tooltips */
+    [data-tooltip] {
+      position: relative;
+      cursor: help;
+    }
+
+    [data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      z-index: 1000;
+      margin-bottom: 8px;
+      animation: tooltipFade 0.3s ease;
+    }
+
+    @keyframes tooltipFade {
+      from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    /* Progress Ring for Circularity */
+    .progress-ring {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto;
+    }
+
+    .progress-ring svg {
+      transform: rotate(-90deg);
+    }
+
+    .progress-ring-circle {
+      fill: none;
+      stroke: rgba(6, 182, 212, 0.1);
+      stroke-width: 8;
+    }
+
+    .progress-ring-value {
+      fill: none;
+      stroke: url(#gradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      transition: stroke-dasharray 0.8s ease;
+    }
+
+    .progress-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+#savePdfBtn, #saveProjectBtn {
+  display: none !important;
+}
+  </style>
+
+  <!-- libs -->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-icon">◉</div>
+      <h1>CircuLytix – Aluminum LCI (Circular)</h1>
+    </div>
+
+    <div class="grid">
+      <!-- Left Column -->
+      <div>
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div style="flex: 1;">
+              <label>Functional Unit (kg)</label>
+              <input id="fuInput" type="number" value="1000" min="1">
+            </div>
+            <div style="margin-left: 20px;">
+              <button id="savePdfBtn" class="secondary">
+                <span>📄</span>
+                Save Project (PDF)
+              </button>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="section-title">Life Cycle Inventory</div>
+          
+          <div class="col2">
+            <div>
+              <label data-tooltip="Percentage of primary raw material">Primary Material (%)</label>
+              <input id="primaryInput" type="number" value="30" min="0" max="100">
+              
+              <label style="margin-top: 16px;" data-tooltip="Percentage of recycled/secondary content">Secondary / Recycled content (%)</label>
+              <input id="secondaryInput" type="number" value="70" min="0" max="100">
+              
+              <label style="margin-top: 16px;" data-tooltip="Total transport distance in kilometers">Transport distance (km)</label>
+              <input id="distanceInput" type="number" value="2000" min="0">
+            </div>
+            
+            <div>
+              <label data-tooltip="Energy consumption per kilogram (scaled to FU)">Energy (kWh/kg) – scaled to FU</label>
+              <input id="energyInput" type="number" placeholder="AI Fill" readonly>
+              
+              <label style="margin-top: 16px;" data-tooltip="Water usage per kilogram (scaled to FU)">Water (m³/kg) – scaled to FU</label>
+              <input id="waterInput" type="number" placeholder="AI Fill" readonly>
+              
+              <label style="margin-top: 16px;" data-tooltip="Production line efficiency percentage">Production efficiency (%)</label>
+              <input id="effInput" type="number" value="50" min="0" max="100">
+              
+              <label style="margin-top: 16px;" data-tooltip="End-of-life recycling rate">End-of-life recycling (%)</label>
+              <input id="recycleInput" type="number" value="70" min="0" max="100">
+            </div>
+          </div>
+
+          <div style="margin-top: 24px; display: flex; gap: 16px; align-items: center;">
+            <button id="aiFillBtn">
+              <span style="font-size: 1.2em;">✨</span>
+              Use AI to Predict this Value
+            </button>
+            <div style="font-size: 0.875rem; color: var(--text-secondary);">
+              Auto-impute missing inventory values (energy, water, CO₂)
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px;">
+          <div class="section-title">Circular Flow Visualization</div>
+          <div id="sankey"></div>
+          <div id="sankeyText">Primary 30% → Secondary 70% → Recycled 70%</div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div>
+        <div class="card">
+          <div class="section-title">Key Indicators</div>
+
+          <div class="stat-card">
+            <div class="stat-label">Material Circularity</div>
+            <div class="progress-ring">
+              <svg width="120" height="120">
+                <defs>
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#06B6D4;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#7C3AED;stop-opacity:1" />
+                  </linearGradient>
+                </defs>
+                <circle class="progress-ring-circle" cx="60" cy="60" r="52"></circle>
+                <circle class="progress-ring-value" id="progressCircle" cx="60" cy="60" r="52" 
+                        stroke-dasharray="326.726" stroke-dashoffset="326.726"></circle>
+              </svg>
+              <div class="progress-text" id="materialCirc">— %</div>
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div class="section-title">AI-Powered Recommendations</div>
+            <div class="ai-box" id="aiInsight">
+              <span style="opacity: 0.7;">💡</span> Key Insight —
+            </div>
+            <div style="height: 12px;"></div>
+            <div class="ai-box" id="aiNext">
+              <span style="opacity: 0.7;">🎯</span> Next Step —
+            </div>
+          </div>
+
+          <div style="margin-top: 24px;">
+            <div class="section-title">Environmental Impact (circular)</div>
+            
+            <div class="impact-item">
+              <div class="impact-label">
+                <span class="impact-icon">⚡</span>
+                Energy Consumption (kWh/kg)
+              </div>
+              <div class="impact-value" id="impEnergy">—</div>
+            </div>
+            
+            <div class="impact-item">
+              <div class="impact-label">
+                <span class="impact-icon">💧</span>
+                Water Consumption (m³/kg)
+              </div>
+              <div class="impact-value" id="impWater">—</div>
+            </div>
+            
+            <div class="impact-item">
+              <div class="impact-label">
+                <span class="impact-icon">🌱</span>
+                CO₂ Emission (kg per 0.1 kg)
+              </div>
+              <div class="impact-value" id="impCO2">—</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+/* Final frontend (circular-only)
+   - Expects POST /predict
+   - API key: set in API_KEY constant (if backend requires it)
+*/
+
+const API_KEY = "secret123"; // match backend or set '' to skip
+const PREDICT_URL = "/predict";
+
+const primaryInput = document.getElementById('primaryInput');
+const secondaryInput = document.getElementById('secondaryInput');
+const distanceInput = document.getElementById('distanceInput');
+const effInput = document.getElementById('effInput');
+const recycleInput = document.getElementById('recycleInput');
+const fuInput = document.getElementById('fuInput');
+
+const energyInput = document.getElementById('energyInput');
+const waterInput = document.getElementById('waterInput');
+
+const materialCirc = document.getElementById('materialCirc');
+const aiInsight = document.getElementById('aiInsight');
+const aiNext = document.getElementById('aiNext');
+
+const impEnergy = document.getElementById('impEnergy');
+const impWater = document.getElementById('impWater');
+const impCO2 = document.getElementById('impCO2');
+
+const sankeyDiv = document.getElementById('sankey');
+const sankeyText = document.getElementById('sankeyText');
+
+const aiFillBtn = document.getElementById('aiFillBtn');
+const savePdfBtn = document.getElementById('savePdfBtn');
+
+function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+/* keep primary + secondary linked */
+primaryInput.addEventListener('input', ()=>{
+  let v = clamp(Number(primaryInput.value||0), 0, 100);
+  primaryInput.value = v;
+  secondaryInput.value = clamp(100 - v, 0, 100);
+  updateLocalCircularity();
+  updateSankey();
+});
+secondaryInput.addEventListener('input', ()=>{
+  let s = clamp(Number(secondaryInput.value||0), 0, 100);
+  secondaryInput.value = s;
+  primaryInput.value = clamp(100 - s, 0, 100);
+  updateLocalCircularity();
+  updateSankey();
+});
+recycleInput.addEventListener('input', ()=>{
+  updateLocalCircularity();
+  updateSankey();
+});
+function updateLocalCircularity(){
+  const s = Number(secondaryInput.value||0);
+  const r = Number(recycleInput.value||0);
+  const val = Math.round((s * (r/100)) * 100)/100;
+  materialCirc.textContent = (isFinite(val) ? val : 0) + " %";
+}
+
+/* ----------------- Google Sankey ----------------- */
+google.charts.load('current', {'packages':['sankey']});
+google.charts.setOnLoadCallback(updateSankey);
+
+function updateSankey(){
+  const p = Number(primaryInput.value||0);
+  const s = Number(secondaryInput.value||0);
+  const r = Number(recycleInput.value||0);
+  const recycledAmountPct = (s * (r/100));
+
+  const data = new google.visualization.DataTable();
+  data.addColumn('string','From');
+  data.addColumn('string','To');
+  data.addColumn('number','Weight');
+
+  // weights derived from percentages, but provide minimum to keep visibility
+  const weightScale = 12;
+  data.addRows([
+    ['Primary','Processing', Math.max(2, p*weightScale)],
+    ['Secondary','Processing', Math.max(2, s*weightScale)],
+    ['Processing','Recycled', Math.max(2, recycledAmountPct*weightScale)],
+    ['Processing','Waste', Math.max(2, (100 - recycledAmountPct)*weightScale)]
+  ]);
+
+  const options = {
+    height: 360,
+    sankey: {
+      node: {
+        width: 24,
+        nodePadding: 12,
+        label: { fontSize: 12, color: '#ffffff' },
+        interactivity: false,
+      },
+      link: {
+        colorMode: 'gradient',
+        colors: ['#0ad6b2', '#075f4d'] // hex gradient avoids the rgba parsing error
+      }
+    },
+    backgroundColor: { fill:'#081715' },
+    tooltip: { isHtml: true }
+  };
+  const chart = new google.visualization.Sankey(sankeyDiv);
+  chart.draw(data, options);
+
+  sankeyText.textContent = `Primary ${p}% → Secondary ${s}% → Recycled ${Math.round(recycledAmountPct*100)/100}%`;
+  sankeyText.style.opacity = '0';
+  // small animation reflow
+  requestAnimationFrame(()=>{ sankeyText.style.animation = 'none'; void sankeyText.offsetWidth; sankeyText.style.animation = null; sankeyText.style.opacity = '1'; });
+}
+
+/* ----------------- Predict call ----------------- */
+async function callPredict() {
+  aiFillBtn.disabled = true;
+  aiFillBtn.textContent = "Working…";
+
+  const payload = {
+    inputs: {
+      primary_content: Number(primaryInput.value||0),
+      secondary_content: Number(secondaryInput.value||0),
+      transport_distance_km: Number(distanceInput.value||0),
+      production_efficiency: Number(effInput.value||50),
+      end_of_life_recycling: Number(recycleInput.value||70)
+    },
+    functional_unit_kg: Number(fuInput.value||1000)
+  };
+
+  try {
+    const headers = {'Content-Type':'application/json'};
+    if (API_KEY) headers['X-API-Key'] = API_KEY;
+    const res = await fetch(PREDICT_URL, {method:'POST', headers, body: JSON.stringify(payload)});
+    const j = await res.json();
+    if (!res.ok) {
+      alert(j && j.error ? j.error : "Predict failed");
+      return;
+    }
+    const circular = j.circular || {};
+    const scaled = circular.scaled_to_fu || {};
+    impEnergy.textContent = (scaled.energy_kwh !== undefined) ? Number(scaled.energy_kwh).toLocaleString(undefined, {maximumFractionDigits:3}) : '—';
+    impWater.textContent = (scaled.water_l !== undefined) ? Number(scaled.water_l).toLocaleString(undefined, {maximumFractionDigits:3}) : '—';
+    impCO2.textContent = (scaled.co2_kg !== undefined) ? Number(scaled.co2_kg).toLocaleString(undefined, {maximumFractionDigits:3}) : '—';
+    energyInput.value = scaled.energy_kwh !== undefined ? Math.round(Number(scaled.energy_kwh)*1000)/1000 : '';
+    waterInput.value = scaled.water_l !== undefined ? Math.round(Number(scaled.water_l)*1000)/1000 : '';
+
+    const matCirc = circular.material_circularity_pct;
+    if (matCirc !== undefined && matCirc !== null) {
+      materialCirc.textContent = matCirc + " %";
+    } else {
+      updateLocalCircularity();
+    }
+
+    if (j.recommendations) {
+      aiInsight.textContent = j.recommendations.key_insight || "Key Insight —";
+      aiNext.textContent = j.recommendations.next_step || "Next Step —";
+    } else {
+      aiInsight.textContent = "Compared to a traditional primary-only route, circularity reduces impacts when recycled content increases.";
+      aiNext.textContent = "Next Step: Improve recycled content, production efficiency, and end-of-life collection.";
+    }
+
+    updateSankey();
+  } catch(err) {
+    console.error(err);
+    alert("Predict failed: " + (err.message || err));
+  } finally {
+    aiFillBtn.disabled = false;
+    aiFillBtn.textContent = "✨ Use AI to Predict this Value";
+  }
+}
+aiFillBtn.addEventListener('click', callPredict);
+
+/* Save PDF (screenshot) */
+savePdfBtn.addEventListener('click', async ()=>{
+  savePdfBtn.disabled = true;
+  savePdfBtn.textContent = "Rendering PDF…";
+  try {
+    const container = document.querySelector('.container');
+    const canvas = await html2canvas(container, {scale:2});
+    const imgData = canvas.toDataURL('image/png');
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({orientation:'landscape', unit:'px', format:[canvas.width, canvas.height]});
+    pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+    pdf.save('CircuLytix_Project.pdf');
+  } catch (err) {
+    console.error(err);
+    alert('PDF generation failed: ' + err);
+  } finally {
+    savePdfBtn.disabled = false;
+    savePdfBtn.textContent = "Save Project (PDF)";
+  }
+});
+
+/* initial set */
+updateLocalCircularity();
+google.charts.setOnLoadCallback(updateSankey);
+
+</script>
+</body>
+</html>
